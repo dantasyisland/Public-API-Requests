@@ -1,8 +1,10 @@
 function fetchData(url) {
   return fetch(url)
     .then((res) => res.json())
-    .then((res) => iterate(res.results))
-    .then((res) => console.log(res)); // because of return results
+    .then((res) => iterate(res.results)) // results returned -- have it return cards
+    .then((res) => printArray(res))
+    .then((res) => addCards(res))
+  // because of return results
 }
 
 fetchData("https://randomuser.me/api/?results=12");
@@ -22,16 +24,41 @@ function iterate(results) {
 
     gallery.insertAdjacentHTML("beforeend", cardHTML);
   });
+
   return results;
 }
+// Gotta get the name out
 
-const gallery = document.getElementById("gallery");
-gallery.addEventListener("click", (e) => {
-  if ((e.target.parentNode.nodeName) === 'DIV') {
-      console.log(e.target);
-  }; //
+function addCards(cards) {
+  for (let i = 0; i < cards.length; i++) {
+    console.log(cards[i]);
+    cards[i].addEventListener('click', e => {
+      kickOutWhatINeed(cards[i]);
 
-});
+    })
+  }
+
+}
+
+function printArray(results) {
+  console.log(results);
+  const cards = document.getElementById('gallery').children
+  return cards;
+
+}
+
+function kickOutWhatINeed(card) {
+  console.log(card);
+}
+
+// gallery.addEventListener("click", (e) => {
+//   if ((e.target.parentNode.nodeName) === 'DIV') {
+//     console.log(e.target.parentNode);
+
+
+//   }; //
+
+// });
 
 
 
