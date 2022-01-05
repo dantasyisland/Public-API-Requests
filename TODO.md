@@ -2,19 +2,19 @@
 
 This app displays twelve users generated from the random user api (put link here). Clicking on a user card will display a modal of that user with more information. **ADD MORE**
 
-### To Do
+### To Do As Of 1/5/2021
 
 - [ ] Modal Display
 
-  - [ ] Toggle classname
+  - [x] Toggle classname
   - [ ] Styling
-  - [ ]
-  - [ ]
+  - [x] Add event listeners to close modal
+  - [x] Add event listeners to change modals
 
 - [ ] Formatting
 
-  - [ ] Review what needs to formatted add to this list
-  - [ ] **There will be more** Don't sleep on it kid
+  - [ ] The formatting of the Cell Number should be (XXX) XXX-XXXX
+  - [ ] Formatting of the Birthday should be MM/DD/YYYY.
 
 - [ ] Search Functionality
 
@@ -22,4 +22,4 @@ This app displays twelve users generated from the random user api (put link here
 
 ### Completed Column ✓
 
-- [x] Completed task title
+- [x] Lots of code lolz

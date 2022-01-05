@@ -17,7 +17,9 @@ body {
 body {
     font-family: "Nunito", sans-serif;
     text-align: center;
-    background: rgba(235, 235, 235, 0.9);
+    /* background: rgba(235, 235, 235, 0.9);  */
+
+    background: rgba(0, 0, 255, 0.2);
 }
 
 header {
@@ -91,8 +93,10 @@ header h1 {
     margin: 10px 10px 20px;
     padding: 10px;
     background: rgba(245, 245, 245, 0.9);
-    border-radius: 0.25em;
-    border: 1px solid rgba(50, 50, 50, 0.3);
+    /*  */
+    border-radius: 0.9em;
+    /*  */
+    border: 1.4px solid rgba(50, 50, 50, 0.3);
     transition: .4s ease-out;
     overflow: hidden;
 }
@@ -148,6 +152,7 @@ header h1 {
     border-radius: 0.25em;
     border: 1px solid rgba(100, 100, 100, 0.3);
     transition: .4s ease-out;
+    display: none;
 }
 
 .modal-close-btn {
@@ -251,16 +256,16 @@ header h1 {
 @media (min-width: 1024px) {
 
     .card:hover {
-        background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(50, 50, 50, 0.9);
+        background: rgb(151, 214, 233);
+        border: 3px solid rgba(50, 50, 50, 0.9);
     }
 
     .card:hover .card-text {
-        color: rgba(25, 25, 25, 1);
+        color: rgb(0, 0, 0);
     }
 
     .btn:hover {
-        background: rgba(255, 255, 255, 1);
+
         color: rgba(25, 25, 25, 1);
     }
 }

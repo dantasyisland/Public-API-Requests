@@ -1,11 +1,11 @@
 function fetchData(url) {
   return fetch(url)
-    .then((res) => res.json())
-    .then((res) => {
-      createCards(res);
-      createModals(res);
-    }).then((res) => getCards(res))
-    .then((res) => addEventListenerToCards(res))
+    .then((result) => result.json())
+    .then((result) => {
+      createCards(result);
+      createModals(result);
+    }).then((result) => getCards(result))
+    .then((result) => addEventListenerToCards(result))
   // .then(() => {})
   // .then(() => console.log('MORE TO DO'));
   // because of return results
@@ -25,10 +25,24 @@ const gallery = document.getElementById('gallery');
 
 const modalContainer = document.createElement('div');
 modalContainer.className = 'modal-container';
-gallery.insertAdjacentElement('afterend', modalContainer)
+gallery.insertAdjacentElement('afterend', modalContainer);
 
+
+// Found in both the card and modal window - selects the paragraph that contains the email
+const firstParagraph = 'p:first-of-type';
+
+
+/**
+ *
+ */
 
 fetchData(url);
+
+/**
+ *
+ * @param {*} result
+ * @returns
+ */
 
 function createCards(result) {
   result.results.forEach((element) => {
@@ -53,6 +67,11 @@ function createCards(result) {
  * Modal Code - build this function and have fetch pass it for now - get the button working - gotta get one out of here
  */
 
+/**
+ *
+ * @param {*} result
+ */
+
 function createModals(result) {
   result.results.forEach((element) => {
     const modalHTML = `
@@ -75,6 +94,12 @@ function createModals(result) {
   });
 }
 
+/**
+ *
+ * @param {*} results
+ * @returns
+ */
+
 function getCards(results) {
   // console.log(results);
   const cards = document.getElementById("gallery").children;
@@ -94,9 +119,44 @@ function addEventListenerToCards(cards) {
   }
 }
 
-// iterate through modal - match email to email
-
+/**
+ *
+ * @param {HTMLElement} card
+ */
 function kickOutWhatINeed(card) {
-  const chosenCard = card.children[1].children[1].innerText; // Gives email
-  console.log(chosenCard);
+  const chosenCardEmail = card.querySelector(firstParagraph).textContent; // Gives email
+  console.log(chosenCardEmail)
+  showModal(chosenCardEmail);
+
 }
+
+/**
+ *
+ * @param {*} chosenCard
+ */
+
+function showModal(chosenCardEmail) {
+  const email = chosenCardEmail;
+  const collection = document.querySelectorAll('.modal');
+  const modalContainer = document.querySelector('.modal-container');
+
+  collection.forEach(modal => {
+    const modalEmail = modal.querySelector('p:first-of-type').innerText;
+    if (email === modalEmail) {
+      const closeButton = modal.querySelector('.modal-close-btn')
+      modalContainer.style.display = 'block';
+      modal.style.display = 'block';
+      closeButton.addEventListener('click', e => {
+        modal.style.display = 'none';
+        modalContainer.style.display = 'none';
+      })
+    };
+  })
+}
+
+
+
+/**
+ * What was I doing last?
+ * showModal fucntion - takes card email and checks in first of type
+ */
