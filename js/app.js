@@ -1,11 +1,11 @@
 function fetchData(url) {
   return fetch(url)
-    .then((result) => result.json())
-    .then((result) => {
-      createCards(result);
-      createModals(result);
-    }).then((result) => getCards(result))
-    .then((result) => addEventListenerToCards(result))
+    .then((res) => res.json())
+    .then((res) => {
+      createCards(res);
+      createModals(res);
+    }).then((res) => getCards(res))
+    .then((res) => addEventListenerToCards(res))
   // .then(() => {})
   // .then(() => console.log('MORE TO DO'));
   // because of return results
@@ -40,12 +40,12 @@ fetchData(url);
 
 /**
  *
- * @param {*} result
+ * @param {*} res
  * @returns
  */
 
-function createCards(result) {
-  result.results.forEach((element) => {
+function createCards(res) {
+  res.results.forEach((element) => {
     console.log(element);
     const cardHTML = `
       <div class="card">
@@ -60,7 +60,7 @@ function createCards(result) {
       </div>`;
     gallery.insertAdjacentHTML("beforeend", cardHTML);
   });
-  return result;
+  return res;
 }
 
 /**
@@ -69,11 +69,11 @@ function createCards(result) {
 
 /**
  *
- * @param {*} result
+ * @param {*} res
  */
 
-function createModals(result) {
-  result.results.forEach((element) => {
+function createModals(res) {
+  res.results.forEach((element) => {
     const modalHTML = `
     <div class="modal">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -90,7 +90,7 @@ function createModals(result) {
         </div>
     </div>`
     modalContainer.insertAdjacentHTML("beforeend", modalHTML);
-    return result;
+    return res;
   });
 }
 
