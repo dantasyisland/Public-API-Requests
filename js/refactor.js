@@ -1,15 +1,18 @@
+let fetchresults;
+
+
 function fetchData(url) {
   return fetch(url)
     .then((result) => result.json())
-    .then((result) => {
-      createCards(result);
-      createModals(result);
-    })
-    .then((result) => getCards(result))
-    .then((result) => addEventListenerToCards(result))
-    .then(() => addEventListenerToModalButtons())
-    .then(() => console.log("done"))
-    .catch(error => console.log(error));
+    .then((result) => createCards(result))
+    .then((result) => fetchresults = result)
+  //   createModals(result);
+  // })
+  // .then((result) => getCards(result))
+  // .then((result) => addEventListenerToCards(result))
+  // .then(() => addEventListenerToModalButtons())
+  // .then(() => console.log("done"))
+  // .catch(error => console.log(error));
 
   // .then(() => {})
   // .then(() => console.log('MORE TO DO'));
@@ -33,57 +36,9 @@ function fetchData(url) {
 
 
 
-/**
- *
- */
-
-const url = "https://randomuser.me/api/?results=12";
-
-/**
- * MIGHT NEED BODY BUT WE'LL SEE
- */
-const gallery = document.getElementById("gallery");
-
-const modalContainer = document.createElement("div");
-modalContainer.className = "modal-container";
-gallery.insertAdjacentElement("afterend", modalContainer);
 
 // Found in both the card and modal window - selects the paragraph that contains the email
 const firstParagraph = "p:first-of-type";
-
-/**
- *
- */
-
-fetchData(url);
-
-/**
- *
- * @param {*} result
- * @returns
- */
-
-function createCards(result) {
-  let index = 0;
-  result.results.forEach((element) => {
-    console.log(element);
-    const cardHTML = `
-      <div class="card" data-index-number = "${index}">
-        <div class="card-img-container">
-          <img class="card-img" src="${element.picture.medium}" alt="profile picture">
-        </div>
-        <div class="card-info-container">
-          <h3 id="name" class="card-name cap">${element.name.first} ${element.name.last}</h3>
-          <p class="card-text">${element.email}</p>
-          <p class="card-text cap">${element.location.city} ${element.location.state}</p>
-        </div>
-      </div>`;
-    gallery.insertAdjacentHTML("beforeend", cardHTML);
-    index++;
-  });
-  return result;
-}
-
 /**
  * Modal Code - build this function and have fetch pass it for now - get the button working - gotta get one out of here
  */
@@ -124,7 +79,7 @@ function createModals(result) {
   </div>`;
 
   modalContainer.insertAdjacentHTML("beforeend", modalButtonHTML);
-  return result;
+  getCards(result);
 }
 
 /**
@@ -136,7 +91,7 @@ function createModals(result) {
 function getCards(results) {
   // console.log(results);
   const cards = document.getElementById("gallery").children;
-  return cards;
+  addEventListenerToCards(cards);
 }
 
 /**
@@ -158,7 +113,6 @@ function addEventListenerToCards(cards) {
  */
 function kickOutWhatINeed(card) {
   const chosenCardEmail = card.querySelector(firstParagraph).textContent; // Gives email
-  console.log(chosenCardEmail);
   showModal(chosenCardEmail);
 }
 
