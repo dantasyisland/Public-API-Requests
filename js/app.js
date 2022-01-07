@@ -8,11 +8,30 @@ function fetchData(url) {
     .then((result) => getCards(result))
     .then((result) => addEventListenerToCards(result))
     .then(() => addEventListenerToModalButtons())
-    .then(() => console.log("done"));
+    .then(() => console.log("done"))
+    .catch(error => console.log(error));
+
   // .then(() => {})
   // .then(() => console.log('MORE TO DO'));
   // because of return results
 }
+
+
+
+
+
+
+/**
+ * Rewriting this
+ * Make a list of what's called - try a second script and just call inside event listeners - don't need to create a modal for each one - just the one being called
+ */
+
+
+
+
+
+
+
 
 /**
  *
@@ -54,7 +73,7 @@ function createCards(result) {
           <img class="card-img" src="${element.picture.medium}" alt="profile picture">
         </div>
         <div class="card-info-container">
-          <h3 id="name" class="card-name cap">${element.name.first} ${element.name.last} ${element.phone}</h3>
+          <h3 id="name" class="card-name cap">${element.name.first} ${element.name.last}</h3>
           <p class="card-text">${element.email}</p>
           <p class="card-text cap">${element.location.city} ${element.location.state}</p>
         </div>
@@ -76,7 +95,10 @@ function createCards(result) {
 
 function createModals(result) {
   let index = 0;
+
   result.results.forEach((element) => {
+    dob = new Date(element.dob.date).toLocaleDateString();
+
     const modalHTML = `
     <div class="modal" data-index-number = "${index}">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -89,7 +111,7 @@ function createModals(result) {
             <p class="modal-text">${element.phone}</p>
             <p class="modal-text">${element.location.street.number} ${element.location.street.name} ${element.location.city}
                 ${element.location.state} ${element.location.postcode} ${element.location.country}</p>
-            <p class="modal-text">${element.dob.date} </p>
+            <p class="modal-text">${dob} </p>
         </div>
     </div>`;
     modalContainer.insertAdjacentHTML("beforeend", modalHTML);
