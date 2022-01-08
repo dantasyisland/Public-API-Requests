@@ -1,244 +1,138 @@
-function fetchData(url) {
-  return fetch(url)
-    .then((result) => result.json())
-    .then((result) => {
-      createCards(result);
-      createModals(result);
-    })
-    .then((result) => getCards(result))
-    .then((result) => addEventListenerToCards(result))
-    .then(() => addEventListenerToModalButtons())
-    .then(() => console.log("done"))
-    .catch(error => console.log(error));
-
-  // .then(() => {})
-  // .then(() => console.log('MORE TO DO'));
-  // because of return results
-}
-
-
-
-
-
-
-/**
- * Rewriting this
- * Make a list of what's called - try a second script and just call inside event listeners - don't need to create a modal for each one - just the one being called
- */
-
-
-
-
-
-
-
-
-/**
- *
- */
-
-const url = "https://randomuser.me/api/?results=12";
-
-/**
- * MIGHT NEED BODY BUT WE'LL SEE
- */
+const url = "https://randomuser.me/api/?nat=us&results=12";
 const gallery = document.getElementById("gallery");
+const employeeArray = [];
 
-const modalContainer = document.createElement("div");
-modalContainer.className = "modal-container";
-gallery.insertAdjacentElement("afterend", modalContainer);
-
-// Found in both the card and modal window - selects the paragraph that contains the email
-const firstParagraph = "p:first-of-type";
-
-/**
- *
- */
-
-fetchData(url);
-
-/**
- *
- * @param {*} result
- * @returns
- */
-
-function createCards(result) {
-  let index = 0;
-  result.results.forEach((element) => {
-    console.log(element);
-    const cardHTML = `
-      <div class="card" data-index-number = "${index}">
-        <div class="card-img-container">
-          <img class="card-img" src="${element.picture.medium}" alt="profile picture">
-        </div>
-        <div class="card-info-container">
-          <h3 id="name" class="card-name cap">${element.name.first} ${element.name.last}</h3>
-          <p class="card-text">${element.email}</p>
-          <p class="card-text cap">${element.location.city} ${element.location.state}</p>
-        </div>
-      </div>`;
-    gallery.insertAdjacentHTML("beforeend", cardHTML);
-    index++;
-  });
-  return result;
+function getUserData(url) {
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => createEmployeeArray(data))
+    .then((res) => createCards(res.results))
+    .catch((error) => console.log(error));
 }
 
-/**
- * Modal Code - build this function and have fetch pass it for now - get the button working - gotta get one out of here
- */
+function createEmployeeArray(data) {
+  data.results.forEach((employee) => {
+    employeeArray.push(employee);
+  });
+  return data;
+}
 
-/**
- *
- * @param {*} result
- */
+function createCards(arrayOfEmployees) {
+  gallery.innerHTML = '';
+  arrayOfEmployees.forEach((employee, index) => {
+    createCard(employee, index);
+  });
+  const employees = Array.from(gallery.children);
+  employees.forEach((employee) => {
 
-function createModals(result) {
-  let index = 0;
 
-  result.results.forEach((element) => {
-    dob = new Date(element.dob.date).toLocaleDateString();
+    employee.addEventListener("click", (e) => {
+      createModal(arrayOfEmployees, employee.dataset.indexNumber);
+    });
+  });
+}
 
-    const modalHTML = `
-    <div class="modal" data-index-number = "${index}">
-        <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-        <div class="modal-info-container">
-            <img class="modal-img" src="${element.picture.large}" alt="profile picture">
-            <h3 id="name" class="modal-name cap">${element.name.first} ${element.name.last}</h3>
-            <p class="modal-text">${element.email}</p>
-            <p class="modal-text cap">${element.location.city} ${element.location.state}</p>
-            <hr>
-            <p class="modal-text">${element.phone}</p>
-            <p class="modal-text">${element.location.street.number} ${element.location.street.name} ${element.location.city}
-                ${element.location.state} ${element.location.postcode} ${element.location.country}</p>
-            <p class="modal-text">${dob} </p>
-        </div>
+function createCard(employee, index) {
+  const cardHTML = `
+    <div class="card" data-index-number = "${index}">
+      <div class="card-img-container">
+        <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
+      </div>
+      <div class="card-info-container">
+        <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
+        <p class="card-text">${employee.email}</p>
+        <p class="card-text cap">${employee.location.city} ${employee.location.state}</p>
+      </div>
     </div>`;
-    modalContainer.insertAdjacentHTML("beforeend", modalHTML);
-    index++;
+  gallery.insertAdjacentHTML("beforeend", cardHTML);
+}
+
+function createModal(arrayOfEmployees, index) {
+
+  const employeeModalData = arrayOfEmployees[index];
+  dob = new Date(employeeModalData.dob.date).toLocaleDateString();
+
+  const modalHTML = `
+    <div class="modal-container">
+      <div class="modal" data-modal-index-number = "${index}">
+          <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+          <div class="modal-info-container">
+              <img class="modal-img" src="${employeeModalData.picture.large}" alt="profile picture">
+              <h3 id="name" class="modal-name cap">${employeeModalData.name.first} ${employeeModalData.name.last}</h3>
+              <p class="modal-text">${employeeModalData.email}</p>
+              <p class="modal-text cap">${employeeModalData.location.city} ${employeeModalData.location.state}</p>
+              <hr>
+              <p class="modal-text">${employeeModalData.phone}</p>
+              <p class="modal-text">${employeeModalData.location.street.number} ${employeeModalData.location.street.name} ${employeeModalData.location.city}
+                  ${employeeModalData.location.state} ${employeeModalData.location.postcode} ${employeeModalData.location.country}</p>
+              <p class="modal-text">${dob} </p>
+          </div>
+          <div class="modal-btn-container">
+      <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+      <button type="button" id="modal-next" class="modal-next btn">Next</button>
+      </div>
+    </div>`;
+  gallery.insertAdjacentHTML("afterend", modalHTML);
+  showModal(employeeModalData, index, arrayOfEmployees);
+}
+
+function showModal(employee, index, arrayOfEmployees) {
+
+  const modal = document.querySelector(
+    `[data-modal-index-number = '${index}']`
+  );
+  const closeButton = modal.querySelector(".modal-close-btn");
+  const modalContainer = modal.parentElement;
+  modalContainer.style.display = "block";
+
+  closeButton.addEventListener("click", (e) => {
+    modalContainer.style.display = "none";
+    modalContainer.remove();
   });
 
-  const modalButtonHTML = `<div class="modal-btn-container">
-  <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-  <button type="button" id="modal-next" class="modal-next btn">Next</button>
-  </div>`;
-
-  modalContainer.insertAdjacentHTML("beforeend", modalButtonHTML);
-  return result;
-}
-
-/**
- *
- * @param {*} results
- * @returns
- */
-
-function getCards(results) {
-  // console.log(results);
-  const cards = document.getElementById("gallery").children;
-  return cards;
-}
-
-/**
- * Adds Event Listeners To Cards
- * @param {HTMLCollection} cards
- */
-function addEventListenerToCards(cards) {
-  for (let i = 0; i < cards.length; i++) {
-    // console.log(cards[i]);
-    cards[i].addEventListener("click", (e) => {
-      kickOutWhatINeed(cards[i]);
-    });
-  }
-}
-
-/**
- *
- * @param {HTMLElement} card
- */
-function kickOutWhatINeed(card) {
-  const chosenCardEmail = card.querySelector(firstParagraph).textContent; // Gives email
-  console.log(chosenCardEmail);
-  showModal(chosenCardEmail);
-}
-
-/**
- *
- * @param {*} chosenCard
- */
-
-function showModal(chosenCardEmail) {
-  const email = chosenCardEmail;
-  const collection = document.querySelectorAll(".modal");
-  const modalContainer = document.querySelector(".modal-container");
-
-  collection.forEach((modal) => {
-    const modalEmail = modal.querySelector("p:first-of-type").innerText;
-    if (email === modalEmail) {
-      const closeButton = modal.querySelector(".modal-close-btn");
-      modalContainer.style.display = "block";
-      modal.style.display = "block";
-      modal.classList.add("active");
-      closeButton.addEventListener("click", (e) => {
-        modal.style.display = "none";
-        modalContainer.style.display = "none";
-        modal.classList.remove("active");
-      });
-    }
-  });
-}
-
-/**
- *
- * @param {*} index
- */
-function ChangeModal(index) {
-  const modalLength = document.querySelectorAll(".modal").length;
-  const collection = document.querySelectorAll(".modal");
-  if (index < 0) {
-    index = modalLength - 1;
-  } else if (index > modalLength - 1) {
-    index = 0;
-  } else {
-    console.log(index);
-  }
-  console.log(index);
-  collection.forEach((modal) => {
-    const closeButton = modal.querySelector(".modal-close-btn");
-    closeButton.addEventListener("click", (e) => {
-      modal.style.display = "none";
-      modalContainer.style.display = "none";
-      modal.classList.remove("active");
-    });
-
-    if (parseInt(modal.dataset.indexNumber) === index) {
-      modal.classList.add("active");
-      modal.style.display = "block";
-      console.log("yeah");
-    }
-  });
-}
-
-/**
- * What was I doing last?
- * showModal fucntion - takes card email and checks in first of type
- */
-
-function addEventListenerToModalButtons() {
-  const previousButton = document.getElementById("modal-prev");
+  const prevButton = document.getElementById("modal-prev");
   const nextButton = document.getElementById("modal-next");
-  previousButton.addEventListener("click", (e) => {
-    const activeModalCard = document.querySelector(".active");
-    const activeModalCardIndex = parseInt(activeModalCard.dataset.indexNumber);
-    activeModalCard.classList.remove("active");
-    activeModalCard.style.display = "none";
-    ChangeModal(activeModalCardIndex - 1);
+
+  prevButton.addEventListener("click", (e) => {
+    modalContainer.remove();
+    index--;
+    if (index < 0) index = arrayOfEmployees.length - 1;
+    createModal(arrayOfEmployees, index);
   });
+
   nextButton.addEventListener("click", (e) => {
-    const activeModalCard = document.querySelector(".active");
-    const activeModalCardIndex = parseInt(activeModalCard.dataset.indexNumber);
-    activeModalCard.classList.remove("active");
-    activeModalCard.style.display = "none";
-    ChangeModal(activeModalCardIndex + 1);
+    modalContainer.remove();
+    index++;
+    if (index > arrayOfEmployees.length - 1) index = 0;
+    createModal(arrayOfEmployees, index);
   });
+}
+
+getUserData(url);
+
+const searchContainer = document.querySelector('.search-container');
+const searchHTML = `<form action="#" method="get">
+<input type="search" id="search-input" class="search-input" placeholder="Search...">
+<input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+</form>`;
+
+searchContainer.insertAdjacentHTML('beforeend', searchHTML);
+
+const searchInput = document.getElementById('search-input');
+
+searchInput.addEventListener('keyup', (e) => {
+  search(e.target.value, employeeArray);
+})
+
+function search(input, arrayOfEmployees) {
+  if (input === '') {
+    createCards(arrayOfEmployees)
+  }
+  let newEmployeeArray = [];
+  for (let i = 0; i <= arrayOfEmployees.length - 1; i++) {
+    if (input.length != 0 && (arrayOfEmployees[i].name.first.toLowerCase().includes(input.toLowerCase())) || arrayOfEmployees[i].name.last.toLowerCase().includes(input.toLowerCase())) {
+      newEmployeeArray.push(arrayOfEmployees[i]);
+      createCards(newEmployeeArray)
+    }
+  }
 }
