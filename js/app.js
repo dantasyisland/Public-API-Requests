@@ -121,18 +121,35 @@ searchContainer.insertAdjacentHTML('beforeend', searchHTML);
 const searchInput = document.getElementById('search-input');
 
 searchInput.addEventListener('keyup', (e) => {
-  search(e.target.value, employeeArray);
+  search(e.target.value);
 })
 
-function search(input, arrayOfEmployees) {
-  if (input === '') {
-    createCards(arrayOfEmployees)
-  }
-  let newEmployeeArray = [];
-  for (let i = 0; i <= arrayOfEmployees.length - 1; i++) {
-    if (input.length != 0 && (arrayOfEmployees[i].name.first.toLowerCase().includes(input.toLowerCase())) || arrayOfEmployees[i].name.last.toLowerCase().includes(input.toLowerCase())) {
-      newEmployeeArray.push(arrayOfEmployees[i]);
-      createCards(newEmployeeArray)
+
+function search(input) {
+  const cards = Array.from(gallery.children);
+  cards.forEach(card => {
+    if (input.length != 0 && (card.querySelector('h3').innerText.toLowerCase().includes(input.toLowerCase()))) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
     }
-  }
+  })
+    if (input.length === 0) {
+      cards.forEach(card => {
+        card.style.display = 'block';
+      })
+    }
 }
+
+// function search(input, arrayOfEmployees) {
+//   if (input === '') {
+//     createCards(arrayOfEmployees)
+//   }
+//   let newEmployeeArray = [];
+//   for (let i = 0; i <= arrayOfEmployees.length - 1; i++) {
+//     if (input.length != 0 && (arrayOfEmployees[i].name.first.toLowerCase().includes(input.toLowerCase())) || arrayOfEmployees[i].name.last.toLowerCase().includes(input.toLowerCase())) {
+//       newEmployeeArray.push(arrayOfEmployees[i]);
+//       createCards(newEmployeeArray)
+//     }
+//   }
+// }
