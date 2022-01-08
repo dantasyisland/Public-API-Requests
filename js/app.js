@@ -1,39 +1,58 @@
+/**
+ * Team Treehouse Project 5 - This project fetches data from the
+ * random user API generator and displays information about each
+ * on an "employee" directory page.
+ *
+ * Clicking on an employee will generate a modal window displaying
+ * more information about that employee.
+ *
+ * Search filter functionality has also been added.
+ */
+
 const url = "https://randomuser.me/api/?nat=us&results=12";
 const gallery = document.getElementById("gallery");
 const employeeArray = [];
+
+getUserData(url);
+
+/**
+ * Function that fetches data from Random User API then calls other
+ * functions to setup the initial data needed and create the card divs
+ * Will catch and log error if fetch encounters any issue
+ *
+ * @param {string} url - Url of Random User API
+ */
 
 function getUserData(url) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => createEmployeeArray(data))
-    .then((res) => createCards(res.results))
+    .then(() => createCards(employeeArray))
     .catch((error) => console.log(error));
 }
 
+/**
+ * Function that stores data's results
+ * in an array to be used by other functions
+ *
+ * @param {response} data - response from a fetch URL
+ */
 function createEmployeeArray(data) {
   data.results.forEach((employee) => {
     employeeArray.push(employee);
   });
-  return data;
 }
 
+
+/**
+ * Creates a card div for each employee
+ *
+ * @param { array} arrayOfEmployees
+ */
 function createCards(arrayOfEmployees) {
-  gallery.innerHTML = '';
+  gallery.innerHTML = "";
   arrayOfEmployees.forEach((employee, index) => {
-    createCard(employee, index);
-  });
-  const employees = Array.from(gallery.children);
-  employees.forEach((employee) => {
-
-
-    employee.addEventListener("click", (e) => {
-      createModal(arrayOfEmployees, employee.dataset.indexNumber);
-    });
-  });
-}
-
-function createCard(employee, index) {
-  const cardHTML = `
+    const cardHTML = `
     <div class="card" data-index-number = "${index}">
       <div class="card-img-container">
         <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
@@ -44,9 +63,22 @@ function createCard(employee, index) {
         <p class="card-text cap">${employee.location.city} ${employee.location.state}</p>
       </div>
     </div>`;
-  gallery.insertAdjacentHTML("beforeend", cardHTML);
+    gallery.insertAdjacentHTML("beforeend", cardHTML);
+  });
+  const employees = Array.from(gallery.children);
+  employees.forEach((employee) => {
+    employee.addEventListener("click", (e) => {
+      createModal(employeeArray, employee.dataset.indexNumber);
+    });
+  });
 }
 
+/**
+ * When called by the event listener in createCards a modal window is created then calls the showModal function
+ *
+ * @param {array} arrayOfEmployees - Array to create from
+ * @param {num} index - Index of employee
+ */
 function createModal(arrayOfEmployees, index) {
 
   const employeeModalData = arrayOfEmployees[index];
@@ -73,10 +105,16 @@ function createModal(arrayOfEmployees, index) {
       </div>
     </div>`;
   gallery.insertAdjacentHTML("afterend", modalHTML);
-  showModal(employeeModalData, index, arrayOfEmployees);
+  showModal(arrayOfEmployees, index);
 }
 
-function showModal(employee, index, arrayOfEmployees) {
+/**
+ * Displays modal on screen and allows the user to iterate through the list of employees through previous and next buttons
+ * @param {array} arrayOfEmployees - Array to create from
+ * @param {num} index - Index of employee
+ */
+
+function showModal(arrayOfEmployees, index) {
 
   const modal = document.querySelector(
     `[data-modal-index-number = '${index}']`
@@ -108,7 +146,10 @@ function showModal(employee, index, arrayOfEmployees) {
   });
 }
 
-getUserData(url);
+
+/**
+ * Variables for search functionality and creation of elements
+ */
 
 const searchContainer = document.querySelector('.search-container');
 const searchHTML = `<form action="#" method="get">
@@ -117,39 +158,39 @@ const searchHTML = `<form action="#" method="get">
 </form>`;
 
 searchContainer.insertAdjacentHTML('beforeend', searchHTML);
-
 const searchInput = document.getElementById('search-input');
+
+/**
+ * Event listeners for the search function
+ */
+
+searchInput.addEventListener('submit', (e) => {
+  search(e.target.value);
+})
+
 
 searchInput.addEventListener('keyup', (e) => {
   search(e.target.value);
 })
 
+/**
+ * This function filters results displayed on the page.
+ * @param {string} input - Input text from user's search
+ */
 
 function search(input) {
   const cards = Array.from(gallery.children);
-  cards.forEach(card => {
+  cards.forEach((card) => {
     if (input.length != 0 && (card.querySelector('h3').innerText.toLowerCase().includes(input.toLowerCase()))) {
       card.style.display = 'block';
+
     } else {
       card.style.display = 'none';
     }
   })
-    if (input.length === 0) {
-      cards.forEach(card => {
-        card.style.display = 'block';
-      })
-    }
+  if (input.length === 0) {
+    cards.forEach(card => {
+      card.style.display = 'block';
+    })
+  }
 }
-
-// function search(input, arrayOfEmployees) {
-//   if (input === '') {
-//     createCards(arrayOfEmployees)
-//   }
-//   let newEmployeeArray = [];
-//   for (let i = 0; i <= arrayOfEmployees.length - 1; i++) {
-//     if (input.length != 0 && (arrayOfEmployees[i].name.first.toLowerCase().includes(input.toLowerCase())) || arrayOfEmployees[i].name.last.toLowerCase().includes(input.toLowerCase())) {
-//       newEmployeeArray.push(arrayOfEmployees[i]);
-//       createCards(newEmployeeArray)
-//     }
-//   }
-// }
