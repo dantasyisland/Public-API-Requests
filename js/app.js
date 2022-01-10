@@ -43,7 +43,6 @@ function createEmployeeArray(data) {
   });
 }
 
-
 /**
  * Creates a card div for each employee
  *
@@ -80,7 +79,6 @@ function createCards(arrayOfEmployees) {
  * @param {num} index - Index of employee
  */
 function createModal(arrayOfEmployees, index) {
-
   const employeeModalData = arrayOfEmployees[index];
   dob = new Date(employeeModalData.dob.date).toLocaleDateString();
 
@@ -115,7 +113,6 @@ function createModal(arrayOfEmployees, index) {
  */
 
 function showModal(arrayOfEmployees, index) {
-
   const modal = document.querySelector(
     `[data-modal-index-number = '${index}']`
   );
@@ -146,32 +143,30 @@ function showModal(arrayOfEmployees, index) {
   });
 }
 
-
 /**
  * Variables for search functionality and creation of elements
  */
 
-const searchContainer = document.querySelector('.search-container');
+const searchContainer = document.querySelector(".search-container");
 const searchHTML = `<form action="#" method="get">
 <input type="search" id="search-input" class="search-input" placeholder="Search...">
 <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
 </form>`;
 
-searchContainer.insertAdjacentHTML('beforeend', searchHTML);
-const searchInput = document.getElementById('search-input');
+searchContainer.insertAdjacentHTML("beforeend", searchHTML);
+const searchInput = document.getElementById("search-input");
 
 /**
  * Event listeners for the search function
  */
 
-searchInput.addEventListener('submit', (e) => {
+searchInput.addEventListener("submit", (e) => {
   search(e.target.value);
-})
+});
 
-
-searchInput.addEventListener('keyup', (e) => {
+searchInput.addEventListener("keyup", (e) => {
   search(e.target.value);
-})
+});
 
 /**
  * This function filters results displayed on the page.
@@ -181,16 +176,21 @@ searchInput.addEventListener('keyup', (e) => {
 function search(input) {
   const cards = Array.from(gallery.children);
   cards.forEach((card) => {
-    if (input.length != 0 && (card.querySelector('h3').innerText.toLowerCase().includes(input.toLowerCase()))) {
-      card.style.display = 'block';
-
+    if (
+      input.length != 0 &&
+      card
+        .querySelector("h3")
+        .innerText.toLowerCase()
+        .includes(input.toLowerCase())
+    ) {
+      card.style.display = "flex";
     } else {
-      card.style.display = 'none';
+      card.style.display = "none";
     }
-  })
+  });
   if (input.length === 0) {
-    cards.forEach(card => {
-      card.style.display = 'block';
-    })
+    cards.forEach((card) => {
+      card.style.display = "flex";
+    });
   }
 }
